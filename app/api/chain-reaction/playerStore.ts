@@ -32,7 +32,9 @@ const ALL_PLAYERS_KEY = "players:all";
 
 // Check if we're in production (KV available)
 function isKVAvailable(): boolean {
-  return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  const hasKV = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  console.log(`[PlayerStore] KV Available: ${hasKV}, URL exists: ${!!process.env.KV_REST_API_URL}, Token exists: ${!!process.env.KV_REST_API_TOKEN}`);
+  return hasKV;
 }
 
 // In-memory fallback for local development
@@ -125,6 +127,7 @@ export async function getOrCreatePlayer(
   displayName?: string
 ): Promise<Player> {
   let player = await getPlayer(fid);
+  console.log(`[PlayerStore] getOrCreatePlayer fid=${fid}, found=${!!player}, balance=${player?.pointsBalance}`);
 
   if (!player) {
     const today = getTodayDateString();
@@ -146,13 +149,15 @@ export async function getOrCreatePlayer(
       lastActiveAt: new Date().toISOString(),
     };
     await savePlayer(player);
-    console.log(`[PlayerStore] Created new player: ${username} (fid: ${fid})`);
+    console.log(`[PlayerStore] Created NEW player: ${username} (fid: ${fid}) with ${STARTING_POINTS} points`);
   } else {
+    console.log(`[PlayerStore] Found EXISTING player: ${username} (fid: ${fid}) with ${player.pointsBalance} points`);
     const wasReset = checkAndResetDaily(player);
     player.username = username;
     if (displayName) player.displayName = displayName;
     player.lastActiveAt = new Date().toISOString();
     if (wasReset) {
+      console.log(`[PlayerStore] Daily reset triggered for ${username}`);
       await savePlayer(player);
     }
   }
