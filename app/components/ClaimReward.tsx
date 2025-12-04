@@ -24,7 +24,7 @@ const CHAIN_REACTION_CONTRACT = "0x0000000000000000000000000000000000000000";
 
 export default function ClaimReward({
   fid,
-  username,
+  username: _username,
   potWon,
   chainLength,
   isWeeklyWinner = false,
