@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const miniappEmbed = {
     version: "1",
     imageUrl: minikitConfig.miniapp.heroImageUrl,
+    imageAspectRatio: "3:2",
     button: {
       title: "🎲 Play Chain Reaction",
       action: {
