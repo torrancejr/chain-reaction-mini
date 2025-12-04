@@ -72,6 +72,7 @@ const GAME_STATE_KEY = "game:state";
 
 // Constants
 const EXTEND_COST = 10;
+const BREAK_COST = 20;
 const MIN_DOMINOES_TO_BREAK = 3;
 const POWER_DOMINO_INTERVAL = 7;
 const BOMB_MIN_POT = 50;
@@ -204,6 +205,7 @@ export async function getGameState(): Promise<GameState> {
 export function getGameConstants() {
   return {
     EXTEND_COST,
+    BREAK_COST,
     MIN_DOMINOES_TO_BREAK,
   };
 }
@@ -326,6 +328,16 @@ export async function breakChain(
   // Get or create player
   const player = await getOrCreatePlayer(fid, username, displayName);
 
+  // Check if player has enough points to break
+  if (player.pointsBalance < BREAK_COST) {
+    return {
+      success: false,
+      message: `Not enough points to break! Need ${BREAK_COST}, you have ${player.pointsBalance}.`,
+      state: await getGameState(),
+      player,
+    };
+  }
+
   // Check minimum dominoes
   if (state.currentDominoCount < MIN_DOMINOES_TO_BREAK) {
     return {
@@ -373,11 +385,14 @@ export async function breakChain(
     state.activePower = null;
   }
 
+  // Deduct break cost from player
+  await updatePlayerBalance(fid, -BREAK_COST);
+  
   // Record the break for leaderboard (but DON'T add pot to balance)
   // Players only get 100 points per day - breaking scores points but doesn't refund them
   await recordBreak(fid, chainLength, potWon);
   
-  // Get fresh player data (balance unchanged, just stats updated)
+  // Get fresh player data
   const finalPlayer = await getOrCreatePlayer(fid, username) || player;
 
   // Store the breaker info

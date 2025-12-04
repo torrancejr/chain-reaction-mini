@@ -64,6 +64,7 @@ interface GameState {
   } | null;
   constants: {
     EXTEND_COST: number;
+    BREAK_COST: number;
     MIN_DOMINOES_TO_BREAK: number;
   };
   activePower?: ActivePower | null;
@@ -281,9 +282,11 @@ export default function ChainReactionApp() {
   }
 
   const extendCost = gameState?.constants?.EXTEND_COST || 10;
+  const breakCost = gameState?.constants?.BREAK_COST || 20;
   const minToBreak = gameState?.constants?.MIN_DOMINOES_TO_BREAK || 3;
-  const canBreak = (gameState?.currentDominoCount || 0) >= minToBreak && !chainFalling;
+  const canBreak = (gameState?.currentDominoCount || 0) >= minToBreak && !chainFalling && (player?.pointsBalance || 0) >= breakCost;
   const canAfford = (player?.pointsBalance || 0) >= extendCost;
+  const canAffordBreak = (player?.pointsBalance || 0) >= breakCost;
 
   // Transform dominoes for the chain component
   // Use falling dominoes during animation, otherwise use current state
@@ -503,9 +506,11 @@ export default function ChainReactionApp() {
                   <span className={styles.buttonText}>Break Chain</span>
                 </span>
                 <span className={styles.buttonCost}>
-                  {canBreak 
-                    ? `Score: ${gameState?.currentPotPoints || 0}` 
-                    : `Need ${minToBreak}+ dominoes`}
+                  {(gameState?.currentDominoCount || 0) < minToBreak
+                    ? `Need ${minToBreak}+ dominoes`
+                    : !canAffordBreak
+                    ? `Need ${breakCost} pts`
+                    : `-${breakCost} pts → Score: ${gameState?.currentPotPoints || 0}`}
                 </span>
               </button>
             </div>
@@ -517,8 +522,8 @@ export default function ChainReactionApp() {
             <ul>
               <li><strong>100 pts/day</strong> – Spend wisely, no refunds!</li>
               <li><strong>Place Domino</strong> – Costs {extendCost} pts, grows the pot</li>
-              <li><strong>Break Chain</strong> – Score = pot size (for leaderboard)</li>
-              <li><strong>⚠️ Strategy</strong> – Wait for big pots, but don&apos;t let others steal it!</li>
+              <li><strong>Break Chain</strong> – Costs {breakCost} pts, score = pot size</li>
+              <li><strong>⚠️ Strategy</strong> – Big risk, big reward!</li>
             </ul>
           </div>
         </div>
