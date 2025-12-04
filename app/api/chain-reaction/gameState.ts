@@ -373,9 +373,12 @@ export async function breakChain(
     state.activePower = null;
   }
 
-  // Award pot to player
-  await updatePlayerBalance(fid, potWon);
+  // Award pot to player (get fresh player data after awarding)
+  const playerAfterAward = await updatePlayerBalance(fid, potWon);
   await recordBreak(fid, chainLength, potWon);
+  
+  // Use the player data from after the award to avoid stale data
+  const finalPlayer = playerAfterAward || player;
 
   // Store the breaker info
   state.lastBreaker = {
@@ -400,14 +403,11 @@ export async function breakChain(
   // Save state
   await saveGameState(state);
 
-  // Get updated player data
-  const updatedPlayer = await getOrCreatePlayer(fid, username);
-
   return {
     success: true,
     message: `💥 ${username} broke a ${chainLength}-domino chain and claimed ${potWon} points!${powerMessage}`,
     state: await getGameState(),
-    player: updatedPlayer,
+    player: finalPlayer,
     pointsAwarded: potWon,
   };
 }
