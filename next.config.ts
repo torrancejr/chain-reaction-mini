@@ -1,15 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
-    config.externals.push(
-      "pino-pretty", 
-      "lokijs", 
-      "encoding",
-      "@react-native-async-storage/async-storage"
-    );
-    return config;
-  },
+  // Empty turbopack config to enable Turbopack (Next.js 16 default)
+  turbopack: {},
 };
 
 export default nextConfig;

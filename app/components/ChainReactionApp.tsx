@@ -116,7 +116,7 @@ export default function ChainReactionApp() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("game");
   const [chainFalling, setChainFalling] = useState(false);
-  const [fallingDominoes, setFallingDominoes] = useState<typeof gameState extends { dominoes: infer D } ? D : never>([]);
+  const [fallingDominoes, setFallingDominoes] = useState<DominoInChain[]>([]);
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null); // null = loading, true = show, false = skip
 
   // Use Farcaster FID if available, otherwise use wallet address as ID
