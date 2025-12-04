@@ -6,50 +6,42 @@ import { RootProvider } from "./rootProvider";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  // Get the root URL - ensure it's absolute
-  const rootUrl = 
-    process.env.NEXT_PUBLIC_URL ||
-    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-    "https://chain-reaction-mini.vercel.app";
-  
   // Mini App embed for Farcaster
   const miniappEmbed = {
     version: "1",
-    imageUrl: `${rootUrl}/minikit-hero.png`,
+    imageUrl: minikitConfig.miniapp.heroImageUrl,
     button: {
       title: "🎲 Play Chain Reaction",
       action: {
         type: "launch_miniapp",
-        url: rootUrl,
-        name: "Chain Reaction",
-        splashImageUrl: `${rootUrl}/splash.png`,
-        splashBackgroundColor: "#BFE6EF",
+        url: minikitConfig.miniapp.homeUrl,
+        name: minikitConfig.miniapp.name,
+        splashImageUrl: minikitConfig.miniapp.splashImageUrl,
+        splashBackgroundColor: minikitConfig.miniapp.splashBackgroundColor,
       },
     },
   };
-  
-  console.log("[Metadata] fc:miniapp embed:", JSON.stringify(miniappEmbed, null, 2));
 
   return {
-    title: "Chain Reaction",
-    description: "A social domino game. Build the chain, break it all, win the pot.",
+    title: minikitConfig.miniapp.name,
+    description: minikitConfig.miniapp.description,
     openGraph: {
-      title: "Chain Reaction – Social Domino Game",
-      description: "Extend the chain or break it to claim the pot. A social game of risk and reward.",
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
       images: [
         {
-          url: `${rootUrl}/minikit-hero.png`,
+          url: minikitConfig.miniapp.ogImageUrl,
           width: 1200,
           height: 800,
-          alt: "Chain Reaction",
+          alt: minikitConfig.miniapp.name,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Chain Reaction – Social Domino Game",
-      description: "Extend the chain or break it to claim the pot. A social game of risk and reward.",
-      images: [`${rootUrl}/minikit-hero.png`],
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
+      images: [minikitConfig.miniapp.ogImageUrl],
     },
     other: {
       "fc:miniapp": JSON.stringify(miniappEmbed),
