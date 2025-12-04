@@ -28,7 +28,7 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     icon: "💥",
     title: "Break the Chain",
-    description: "When there are 3+ dominoes, break the chain to claim the entire pot! But watch out – others might beat you to it.",
+    description: "Break at 3+ dominoes to score! The pot becomes your leaderboard score. Points don't refund – spend wisely!",
   },
   {
     icon: "⚡",

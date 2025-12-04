@@ -500,11 +500,11 @@ export default function ChainReactionApp() {
               >
                 <span className={styles.buttonMain}>
                   <span className={styles.buttonIcon}>💥</span>
-                  <span className={styles.buttonText}>Break & Claim Pot</span>
+                  <span className={styles.buttonText}>Break Chain</span>
                 </span>
                 <span className={styles.buttonCost}>
                   {canBreak 
-                    ? `+${gameState?.currentPotPoints || 0} pts` 
+                    ? `Score: ${gameState?.currentPotPoints || 0}` 
                     : `Need ${minToBreak}+ dominoes`}
                 </span>
               </button>
@@ -515,9 +515,10 @@ export default function ChainReactionApp() {
           <div className={styles.rules}>
             <h3>How to Play</h3>
             <ul>
-              <li><strong>Place Domino</strong> – Spend {extendCost} pts to extend the chain</li>
-              <li><strong>Break Chain</strong> – Claim entire pot (need {minToBreak}+ dominoes)</li>
-              <li><strong>⚠️ Risk</strong> – The longer you wait, someone else might claim it!</li>
+              <li><strong>100 pts/day</strong> – Spend wisely, no refunds!</li>
+              <li><strong>Place Domino</strong> – Costs {extendCost} pts, grows the pot</li>
+              <li><strong>Break Chain</strong> – Score = pot size (for leaderboard)</li>
+              <li><strong>⚠️ Strategy</strong> – Wait for big pots, but don&apos;t let others steal it!</li>
             </ul>
           </div>
         </div>

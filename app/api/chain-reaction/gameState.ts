@@ -373,12 +373,12 @@ export async function breakChain(
     state.activePower = null;
   }
 
-  // Award pot to player (get fresh player data after awarding)
-  const playerAfterAward = await updatePlayerBalance(fid, potWon);
+  // Record the break for leaderboard (but DON'T add pot to balance)
+  // Players only get 100 points per day - breaking scores points but doesn't refund them
   await recordBreak(fid, chainLength, potWon);
   
-  // Use the player data from after the award to avoid stale data
-  const finalPlayer = playerAfterAward || player;
+  // Get fresh player data (balance unchanged, just stats updated)
+  const finalPlayer = await getOrCreatePlayer(fid, username) || player;
 
   // Store the breaker info
   state.lastBreaker = {

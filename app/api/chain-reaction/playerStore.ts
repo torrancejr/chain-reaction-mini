@@ -1,7 +1,9 @@
 // Player data store with Vercel KV for production
-// Falls back to in-memory for local development
+// Falls back to file-based storage for local development
 
 import { kv } from "@vercel/kv";
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
 
 export interface Player {
   fid: number;
@@ -30,15 +32,47 @@ const DAILY_LEADERBOARD_KEY = () => `leaderboard:daily:${getTodayDateString()}`;
 const WEEKLY_LEADERBOARD_KEY = () => `leaderboard:weekly:${getWeekStartString()}`;
 const ALL_PLAYERS_KEY = "players:all";
 
+// File path for local persistence
+const LOCAL_DATA_FILE = join(process.cwd(), ".chain-reaction-data.json");
+
 // Check if we're in production (KV available)
 function isKVAvailable(): boolean {
   const hasKV = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
-  console.log(`[PlayerStore] KV Available: ${hasKV}, URL exists: ${!!process.env.KV_REST_API_URL}, Token exists: ${!!process.env.KV_REST_API_TOKEN}`);
+  console.log(`[PlayerStore] KV Available: ${hasKV}`);
   return hasKV;
 }
 
-// In-memory fallback for local development
-const localPlayers: Map<number, Player> = new Map();
+// Local file-based storage for development
+let localPlayers: Map<number, Player> = new Map();
+let localDataLoaded = false;
+
+function loadLocalData(): void {
+  if (localDataLoaded) return;
+  try {
+    if (existsSync(LOCAL_DATA_FILE)) {
+      const data = JSON.parse(readFileSync(LOCAL_DATA_FILE, "utf-8"));
+      if (data.players && Array.isArray(data.players)) {
+        localPlayers = new Map(data.players.map((p: Player) => [p.fid, p]));
+        console.log(`[PlayerStore] Loaded ${localPlayers.size} players from local file`);
+      }
+    }
+  } catch (error) {
+    console.error("[PlayerStore] Failed to load local data:", error);
+  }
+  localDataLoaded = true;
+}
+
+function saveLocalData(): void {
+  try {
+    const data = {
+      players: Array.from(localPlayers.values()),
+      savedAt: new Date().toISOString(),
+    };
+    writeFileSync(LOCAL_DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error("[PlayerStore] Failed to save local data:", error);
+  }
+}
 
 // Date helpers
 function getTodayDateString(): string {
@@ -64,8 +98,11 @@ function isThisWeek(dateStr: string | null | undefined): boolean {
 function checkAndResetDaily(player: Player): boolean {
   const today = getTodayDateString();
   const lastReset = player.lastDailyReset || "";
+  
+  console.log(`[PlayerStore] checkAndResetDaily: today=${today}, lastReset=${lastReset}, currentBalance=${player.pointsBalance}`);
 
   if (!lastReset) {
+    console.log(`[PlayerStore] checkAndResetDaily: No lastReset, initializing to today`);
     player.lastDailyReset = today;
     player.dailyBreakPot = player.dailyBreakPot || 0;
     player.weeklyBreakPot = player.weeklyBreakPot || 0;
@@ -73,6 +110,7 @@ function checkAndResetDaily(player: Player): boolean {
   }
 
   if (lastReset !== today) {
+    console.log(`[PlayerStore] checkAndResetDaily: NEW DAY! Resetting from ${player.pointsBalance} to ${STARTING_POINTS}`);
     player.pointsBalance = STARTING_POINTS;
     player.dailyBreakPot = 0;
     player.lastDailyReset = today;
@@ -81,16 +119,17 @@ function checkAndResetDaily(player: Player): boolean {
       player.weeklyBreakPot = 0;
     }
 
-    console.log(`[PlayerStore] Daily reset for ${player.username}: ${STARTING_POINTS} points`);
     return true;
   }
 
+  console.log(`[PlayerStore] checkAndResetDaily: Same day, no reset needed`);
   return false;
 }
 
 // Get a player by FID
 export async function getPlayer(fid: number): Promise<Player | null> {
   if (!isKVAvailable()) {
+    loadLocalData();
     return localPlayers.get(fid) || null;
   }
 
@@ -99,6 +138,7 @@ export async function getPlayer(fid: number): Promise<Player | null> {
     return player;
   } catch (error) {
     console.error("[PlayerStore] KV get error:", error);
+    loadLocalData();
     return localPlayers.get(fid) || null;
   }
 }
@@ -106,7 +146,9 @@ export async function getPlayer(fid: number): Promise<Player | null> {
 // Save a player
 async function savePlayer(player: Player): Promise<void> {
   if (!isKVAvailable()) {
+    loadLocalData();
     localPlayers.set(player.fid, player);
+    saveLocalData();
     return;
   }
 
@@ -116,7 +158,9 @@ async function savePlayer(player: Player): Promise<void> {
     await kv.sadd(ALL_PLAYERS_KEY, player.fid);
   } catch (error) {
     console.error("[PlayerStore] KV save error:", error);
+    loadLocalData();
     localPlayers.set(player.fid, player);
+    saveLocalData();
   }
 }
 
@@ -168,9 +212,14 @@ export async function getOrCreatePlayer(
 // Update player balance
 export async function updatePlayerBalance(fid: number, amount: number): Promise<Player | null> {
   const player = await getPlayer(fid);
-  if (!player) return null;
+  if (!player) {
+    console.log(`[PlayerStore] updatePlayerBalance: Player ${fid} not found!`);
+    return null;
+  }
 
+  const oldBalance = player.pointsBalance;
   player.pointsBalance += amount;
+  console.log(`[PlayerStore] updatePlayerBalance: fid=${fid}, ${oldBalance} + ${amount} = ${player.pointsBalance}`);
   player.lastActiveAt = new Date().toISOString();
   await savePlayer(player);
   return player;
@@ -228,7 +277,7 @@ export async function recordBreak(fid: number, chainLength: number, potWon: numb
 // Get daily leaderboard
 export async function getDailyLeaderboard(limit: number = 5): Promise<Player[]> {
   if (!isKVAvailable()) {
-    // Local fallback
+    loadLocalData();
     return Array.from(localPlayers.values())
       .filter((p) => (p.dailyBreakPot ?? 0) > 0)
       .sort((a, b) => (b.dailyBreakPot ?? 0) - (a.dailyBreakPot ?? 0))
@@ -262,6 +311,7 @@ export async function getDailyLeaderboard(limit: number = 5): Promise<Player[]> 
 // Get weekly leaderboard
 export async function getWeeklyLeaderboard(limit: number = 5): Promise<Player[]> {
   if (!isKVAvailable()) {
+    loadLocalData();
     return Array.from(localPlayers.values())
       .filter((p) => (p.weeklyBreakPot ?? 0) > 0)
       .sort((a, b) => (b.weeklyBreakPot ?? 0) - (a.weeklyBreakPot ?? 0))
@@ -298,6 +348,7 @@ export async function getLeaderboard(limit: number = 10): Promise<Player[]> {
 // Get all players
 export async function getAllPlayers(): Promise<Player[]> {
   if (!isKVAvailable()) {
+    loadLocalData();
     return Array.from(localPlayers.values());
   }
 
