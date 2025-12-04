@@ -28,6 +28,19 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: minikitConfig.miniapp.ogTitle,
       description: minikitConfig.miniapp.ogDescription,
+      images: [
+        {
+          url: minikitConfig.miniapp.ogImageUrl,
+          width: 1200,
+          height: 800,
+          alt: minikitConfig.miniapp.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
       images: [minikitConfig.miniapp.ogImageUrl],
     },
     other: {
