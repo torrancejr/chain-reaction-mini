@@ -6,18 +6,38 @@ import { RootProvider } from "./rootProvider";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const miniappEmbed = {
+    version: "1",
+    imageUrl: minikitConfig.miniapp.heroImageUrl,
+    button: {
+      title: "🎲 Play Chain Reaction",
+      action: {
+        type: "launch_miniapp",
+        name: minikitConfig.miniapp.name,
+        splashImageUrl: minikitConfig.miniapp.splashImageUrl,
+        splashBackgroundColor: minikitConfig.miniapp.splashBackgroundColor,
+      },
+    },
+  };
+
   return {
     title: minikitConfig.miniapp.name,
     description: minikitConfig.miniapp.description,
+    openGraph: {
+      title: minikitConfig.miniapp.ogTitle,
+      description: minikitConfig.miniapp.ogDescription,
+      images: [minikitConfig.miniapp.ogImageUrl],
+    },
     other: {
-      "fc:miniapp": JSON.stringify({
-        version: minikitConfig.miniapp.version,
-        imageUrl: minikitConfig.miniapp.heroImageUrl,
+      "fc:miniapp": JSON.stringify(miniappEmbed),
+      // Backward compatibility
+      "fc:frame": JSON.stringify({
+        ...miniappEmbed,
         button: {
-          title: `Launch ${minikitConfig.miniapp.name}`,
+          ...miniappEmbed.button,
           action: {
-            name: `Launch ${minikitConfig.miniapp.name}`,
-            type: "launch_miniapp",
+            ...miniappEmbed.button.action,
+            type: "launch_frame",
           },
         },
       }),
