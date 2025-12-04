@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "🎲 Play Chain Reaction",
       action: {
         type: "launch_miniapp",
+        url: minikitConfig.miniapp.homeUrl,
         name: minikitConfig.miniapp.name,
         splashImageUrl: minikitConfig.miniapp.splashImageUrl,
         splashBackgroundColor: minikitConfig.miniapp.splashBackgroundColor,
