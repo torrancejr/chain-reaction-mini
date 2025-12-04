@@ -1,0 +1,79 @@
+.claimContainer {
+  padding: 1rem;
+}
+
+.rewardCard {
+  background: linear-gradient(135deg, var(--green-mint) 0%, var(--green-dark) 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.rewardHeader {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+.rewardDetails {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--foreground);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.transactionWrapper {
+  margin-top: 1rem;
+}
+
+.claimText {
+  font-size: 0.875rem;
+  color: var(--foreground);
+  margin-bottom: 0.75rem;
+}
+
+.claimButton {
+  background: var(--foreground) !important;
+  color: var(--background) !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: transform 0.2s ease !important;
+}
+
+.claimButton:hover {
+  transform: scale(1.02);
+}
+
+.claimedBadge {
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+

@@ -1,0 +1,199 @@
+/* Leaderboard Styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+/* Two-column layout for leaderboards */
+.leaderboardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--foreground-muted);
+}
+
+/* Airdrop Banner */
+.airdropBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #CCFFE0 0%, #BFE6EF 100%);
+  border: 2px solid #9ed4b0;
+  border-radius: 12px;
+  animation: airdropPulse 3s ease-in-out infinite;
+}
+
+@keyframes airdropPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(204, 255, 224, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(204, 255, 224, 0.5);
+  }
+}
+
+.airdropIcon {
+  font-size: 1.25rem;
+  animation: airdropBounce 2s ease-in-out infinite;
+}
+
+@keyframes airdropBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.airdropText {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1a4d2e;
+}
+
+/* Section */
+.section {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  background: #CCFFE0;
+  border-bottom: 2px solid var(--border);
+}
+
+.sectionTitle {
+  font-family: "DM Serif Display", serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin: 0;
+  color: #1a4d2e;
+}
+
+.sectionSubtitle {
+  font-size: 0.55rem;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row:hover {
+  background: rgba(191, 230, 239, 0.2);
+}
+
+.topThree {
+  background: rgba(255, 249, 196, 0.3);
+}
+
+.currentUser {
+  background: rgba(204, 255, 224, 0.4);
+}
+
+.rank {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.rankNumber {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--foreground-muted);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.playerInfo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.username {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.youBadge {
+  font-size: 0.45rem;
+  font-weight: 700;
+  padding: 0.1rem 0.3rem;
+  background: #BFE6EF;
+  color: #1a1a1a;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.scoreValue {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a4d2e;
+}
+
+.scoreLabel {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+}
+
+.emptySection {
+  padding: 1rem;
+  text-align: center;
+  color: var(--foreground-muted);
+  font-size: 0.75rem;
+}

@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@layer base {
+  :root {
+    /* Custom palette */
+    --background: #f8f9fc;
+    --background-alt: #ffffff;
+    --foreground: #1a1a1a;
+    --foreground-muted: #666666;
+    
+    /* Primary - Baby blue (replaces dark green) */
+    --primary-dark: #BFE6EF;
+    --primary-medium: #a8d8e3;
+    --primary-light: #d4eff5;
+    --primary-mint: #e8f6f9;
+    
+    /* Keep these for backwards compat */
+    --green-dark: #BFE6EF;
+    --green-medium: #a8d8e3;
+    --green-light: #CCFFE0;
+    --green-mint: #e0ffeb;
+    
+    /* Accent colors */
+    --pink-light: #FFE2E3;
+    --pink-medium: #FFE2E3;
+    --yellow-light: #fff9c4;
+    --yellow-medium: #ffeb3b;
+    --blue-light: #BFE6EF;
+    --blue-medium: #a8d8e3;
+    --coral: #FFE2E3;
+    
+    /* UI colors */
+    --border: #dde5ed;
+    --border-strong: #BFE6EF;
+    --card-bg: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.08);
+  }
+
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code {
+    background-color: var(--green-light);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem calc(0.25rem + 2px);
+    color: var(--foreground);
+  }
+
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-medium);
+  }
+}
