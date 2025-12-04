@@ -77,7 +77,7 @@ export default function Leaderboard({ currentFid }: LeaderboardProps) {
 
         <div className={styles.score}>
           <span className={styles.scoreValue}>{score}</span>
-          <span className={styles.scoreLabel}>pts</span>
+          <span className={styles.scoreLabel}>best</span>
         </div>
       </div>
     );
@@ -96,8 +96,8 @@ export default function Leaderboard({ currentFid }: LeaderboardProps) {
         {/* Daily Leaderboard */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3 className={styles.sectionTitle}>📅 Daily</h3>
-            <span className={styles.sectionSubtitle}>Resets midnight</span>
+            <h3 className={styles.sectionTitle}>📅 Today&apos;s Best</h3>
+            <span className={styles.sectionSubtitle}>Highest single break</span>
           </div>
           
           {dailyPlayers.length === 0 ? (
@@ -116,8 +116,8 @@ export default function Leaderboard({ currentFid }: LeaderboardProps) {
         {/* Weekly Leaderboard */}
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h3 className={styles.sectionTitle}>🏆 Weekly</h3>
-            <span className={styles.sectionSubtitle}>Resets Sunday</span>
+            <h3 className={styles.sectionTitle}>🏆 Weekly Best</h3>
+            <span className={styles.sectionSubtitle}>Highest single break</span>
           </div>
           
           {weeklyPlayers.length === 0 ? (
