@@ -30,10 +30,10 @@ export const minikitConfig = {
     webhookUrl: `${ROOT_URL}/api/webhook`,
     primaryCategory: "games",
     tags: ["game", "social", "strategy", "domino"],
-    heroImageUrl: `${ROOT_URL}/opengraph-image`,
+    heroImageUrl: `${ROOT_URL}/api/og`,
     tagline: "Build the chain. Risk the pot. Break it all.",
     ogTitle: "Chain Reaction – Social Domino Game",
     ogDescription: "Extend the chain or break it to claim the pot. A social game of risk and reward.",
-    ogImageUrl: `${ROOT_URL}/opengraph-image`,
+    ogImageUrl: `${ROOT_URL}/api/og`,
   },
 } as const;

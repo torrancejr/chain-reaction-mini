@@ -1,14 +1,8 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Chain Reaction - Social Domino Game";
-export const size = {
-  width: 1200,
-  height: 630,
-};
-export const contentType = "image/png";
 
-export default async function Image() {
+export async function GET() {
   return new ImageResponse(
     (
       <div
@@ -162,9 +156,13 @@ export default async function Image() {
             fontWeight: "bold",
             color: "#1a1a1a",
             marginBottom: "16px",
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
           }}
         >
-          ⛓️ Chain Reaction
+          <span>⛓️</span>
+          <span>Chain Reaction</span>
         </div>
 
         {/* Subtitle */}
@@ -190,7 +188,8 @@ export default async function Image() {
       </div>
     ),
     {
-      ...size,
+      width: 1200,
+      height: 630,
     }
   );
 }
