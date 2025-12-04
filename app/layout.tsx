@@ -6,6 +6,7 @@ import { RootProvider } from "./rootProvider";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
+  // Mini App embed for Farcaster (NOT fc:frame - that's for legacy apps only)
   const miniappEmbed = {
     version: "1",
     imageUrl: minikitConfig.miniapp.heroImageUrl,
@@ -31,17 +32,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     other: {
       "fc:miniapp": JSON.stringify(miniappEmbed),
-      // Backward compatibility
-      "fc:frame": JSON.stringify({
-        ...miniappEmbed,
-        button: {
-          ...miniappEmbed.button,
-          action: {
-            ...miniappEmbed.button.action,
-            type: "launch_frame",
-          },
-        },
-      }),
     },
   };
 }
