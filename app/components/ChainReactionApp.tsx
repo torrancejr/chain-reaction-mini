@@ -340,9 +340,18 @@ export default function ChainReactionApp() {
           >
             @chainintelio
           </a>
-          <div className={styles.walletWrapper}>
-            <Wallet />
-          </div>
+          {/* Only show wallet button outside Farcaster context */}
+          {!farcasterUser?.fid && (
+            <div className={styles.walletWrapper}>
+              <Wallet />
+            </div>
+          )}
+          {/* Show Farcaster user badge when in Farcaster */}
+          {farcasterUser?.fid && (
+            <div className={styles.farcasterBadge}>
+              <span>@{farcasterUser.username}</span>
+            </div>
+          )}
         </div>
       </header>
 
@@ -380,12 +389,20 @@ export default function ChainReactionApp() {
         </div>
       )}
 
-      {/* Not connected prompt */}
-      {!isUserConnected && (
+      {/* Not connected prompt - only show outside Farcaster */}
+      {!isUserConnected && !farcasterUser?.fid && (
         <div className={styles.loginPrompt}>
           <span className={styles.loginIcon}>👆</span>
           <p>Connect your wallet above to start playing!</p>
           <p className={styles.loginHint}>You&apos;ll get 100 points to start!</p>
+        </div>
+      )}
+
+      {/* Loading state for Farcaster users */}
+      {!isUserConnected && farcasterUser?.fid && (
+        <div className={styles.loginPrompt}>
+          <span className={styles.loginIcon}>⏳</span>
+          <p>Loading your profile...</p>
         </div>
       )}
 

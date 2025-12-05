@@ -55,6 +55,18 @@
   z-index: 20;
 }
 
+.farcasterBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: #8B5CF6;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 100px;
+}
+
 /* Loading */
 .loader {
   display: flex;
