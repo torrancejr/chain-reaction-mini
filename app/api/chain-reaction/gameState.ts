@@ -16,7 +16,7 @@ export type PowerType = "double_down" | "shockwave" | "bomb" | "reverse" | null;
 // Regular power dominoes (every 7th tile)
 export const POWER_DOMINOES: { type: PowerType; emoji: string; name: string; description: string }[] = [
   { type: "double_down", emoji: "🔥", name: "Double Down", description: "Next placement adds +20 to pot instead of +10" },
-  { type: "shockwave", emoji: "🌩", name: "Shockwave", description: "If broken next turn, pot is cut in half" },
+  { type: "shockwave", emoji: "🌩", name: "Shockwave", description: "Pot cut in half if broken within 3 turns" },
   { type: "reverse", emoji: "🌀", name: "Reverse", description: "Breaker only gets half the pot for 3 turns" },
 ];
 
@@ -144,7 +144,8 @@ function getRandomPower(): ActivePower {
     name: power.name,
   };
 
-  if (power.type === "reverse") {
+  // Both Shockwave and Reverse last for 3 turns
+  if (power.type === "reverse" || power.type === "shockwave") {
     activePower.turnsRemaining = 3;
   }
 
@@ -285,9 +286,9 @@ export async function extendChain(
   state.currentPotPoints += potAddition;
   state.lastMoveAt = new Date().toISOString();
 
-  // Decrement reverse turns if active
-  if (state.activePower?.type === "reverse" && state.activePower.turnsRemaining) {
-    if (!isPowerDomino) {
+  // Decrement turns for Shockwave and Reverse if active
+  if ((state.activePower?.type === "reverse" || state.activePower?.type === "shockwave") && state.activePower.turnsRemaining) {
+    if (!isPowerDomino && !bombTriggered) {
       state.activePower.turnsRemaining -= 1;
       if (state.activePower.turnsRemaining <= 0) {
         state.activePower = null;

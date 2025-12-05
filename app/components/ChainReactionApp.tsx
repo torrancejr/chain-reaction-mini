@@ -420,11 +420,31 @@ export default function ChainReactionApp() {
               <span className={styles.statValue}>{gameState?.currentDominoCount || 0}</span>
               <span className={styles.statLabel}>Chain Length</span>
             </div>
-            <div className={`${styles.statCard} ${styles.potCard} ${getPotLevelClass(gameState?.currentPotPoints || 0)}`}>
+            <div className={`${styles.statCard} ${styles.potCard} ${getPotLevelClass(gameState?.currentPotPoints || 0)} ${gameState?.activePower?.type === 'shockwave' ? styles.potShockwave : ''} ${gameState?.activePower?.type === 'reverse' ? styles.potReverse : ''}`}>
               <span className={styles.statIcon}>🏆</span>
               <span className={styles.statValue}>{gameState?.currentPotPoints || 0}</span>
               <span className={styles.statLabel}>Current Pot</span>
-              {(gameState?.currentPotPoints || 0) >= 50 && (
+              
+              {/* Shockwave Warning on Pot */}
+              {gameState?.activePower?.type === 'shockwave' && (
+                <div className={styles.potWarning}>
+                  <span className={styles.potWarningIcon}>🌩</span>
+                  <span className={styles.potWarningText}>HALF! ({gameState.activePower.turnsRemaining} turns)</span>
+                </div>
+              )}
+              
+              {/* Reverse Warning on Pot */}
+              {gameState?.activePower?.type === 'reverse' && (
+                <div className={styles.potWarning}>
+                  <span className={styles.potWarningIcon}>🌀</span>
+                  <span className={styles.potWarningText}>HALF for {gameState.activePower.turnsRemaining} breaks!</span>
+                </div>
+              )}
+              
+              {/* Break Bait Badge - only show if no power warnings */}
+              {(gameState?.currentPotPoints || 0) >= 50 && 
+               gameState?.activePower?.type !== 'shockwave' && 
+               gameState?.activePower?.type !== 'reverse' && (
                 <span className={styles.breakBaitBadge}>🔥 BREAK BAIT!</span>
               )}
             </div>
@@ -438,9 +458,9 @@ export default function ChainReactionApp() {
                 <span className={styles.powerName}>{gameState.activePower.name}</span>
                 <span className={styles.powerDesc}>
                   {gameState.activePower.type === "double_down" && "Next placement adds +20 to pot!"}
-                  {gameState.activePower.type === "shockwave" && "Break now = pot cut in half!"}
+                  {gameState.activePower.type === "shockwave" && `Break now = pot cut in half! (${gameState.activePower.turnsRemaining} turns left)`}
                   {gameState.activePower.type === "bomb" && "60s timer! No move = pot nukes to zero!"}
-                  {gameState.activePower.type === "reverse" && `Breaker only gets HALF the pot! (${gameState.activePower.turnsRemaining} breaks left)`}
+                  {gameState.activePower.type === "reverse" && `Breaker only gets HALF the pot! (${gameState.activePower.turnsRemaining} turns left)`}
                 </span>
               </div>
               {gameState.activePower.type === "bomb" && gameState.activePower.expiresAt && (
