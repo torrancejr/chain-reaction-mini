@@ -42,8 +42,8 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
   },
   {
     icon: "🔔",
-    title: "Follow Us",
-    description: "Follow @chainintelio on Farcaster to unlock the game and stay updated with announcements!",
+    title: "Stay Connected",
+    description: "Follow @chainintelio on Farcaster to stay updated with new features, prizes, and announcements!",
     isFollowStep: true,
   },
 ];
@@ -72,11 +72,10 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   const handleFollow = () => {
     window.open(FARCASTER_FOLLOW_URL, "_blank");
     setFollowClicked(true);
-    // Auto-enable proceed after clicking follow (trust-based)
-    setTimeout(() => setIsFollowing(true), 1000);
+    setIsFollowing(true);
   };
 
-  const canProceed = !step.isFollowStep || isFollowing;
+  const canProceed = true; // Allow proceeding on all steps
 
   return (
     <div className={styles.overlay}>
@@ -104,29 +103,20 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
         {/* Actions */}
         <div className={styles.actions}>
           {step.isFollowStep && (
-            <>
-              {!isFollowing && (
-                <div className={styles.followNotice}>
-                  <span className={styles.infoIcon}>ℹ️</span>
-                  <span>You must follow @chainintelio to proceed!</span>
-                </div>
-              )}
-              <button
-                className={styles.followButton}
-                onClick={handleFollow}
-                disabled={followClicked && isFollowing}
-              >
-                {isFollowing ? "✓ Following" : "Follow @chainintelio"}
-              </button>
-            </>
+            <button
+              className={styles.followButton}
+              onClick={handleFollow}
+              disabled={isFollowing}
+            >
+              {isFollowing ? "✓ Followed" : "Follow @chainintelio"}
+            </button>
           )}
 
           <button
-            className={`${styles.proceedButton} ${!canProceed ? styles.disabled : ""}`}
+            className={styles.proceedButton}
             onClick={handleNext}
-            disabled={!canProceed}
           >
-            {isLastStep ? "Proceed" : "Next"}
+            {isLastStep ? "Start Playing!" : "Next"}
           </button>
         </div>
       </div>
