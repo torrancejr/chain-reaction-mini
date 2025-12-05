@@ -1,0 +1,23 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "ownerAddress": "0x6cEF30c2546ce5E9a6D160B34112Fbb080BEDeb6"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Chain Reaction",
+    "iconUrl": "https://chain-reaction-mini.vercel.app/icon.png",
+    "splashImageUrl": "https://chain-reaction-mini.vercel.app/splash.png",
+    "splashBackgroundColor": "#BFE6EF",
+    "homeUrl": "https://chain-reaction-mini.vercel.app",
+    "webhookUrl": "https://chain-reaction-mini.vercel.app/api/webhook",
+    "imageUrl": "https://chain-reaction-mini.vercel.app/minikit-hero.png"
+  },
+  "primaryCategory": "games",
+  "tags": ["game", "social", "strategy", "domino"]
+}
+
