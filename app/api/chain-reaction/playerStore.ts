@@ -171,10 +171,10 @@ export async function getOrCreatePlayer(
   displayName?: string
 ): Promise<Player> {
   let player = await getPlayer(fid);
-  console.log(`[PlayerStore] getOrCreatePlayer fid=${fid}, found=${!!player}, balance=${player?.pointsBalance}`);
+  const today = getTodayDateString();
+  console.log(`[PlayerStore] getOrCreatePlayer fid=${fid}, found=${!!player}, balance=${player?.pointsBalance}, today=${today}, lastReset=${player?.lastDailyReset}`);
 
   if (!player) {
-    const today = getTodayDateString();
     player = {
       fid,
       username,
@@ -195,15 +195,35 @@ export async function getOrCreatePlayer(
     await savePlayer(player);
     console.log(`[PlayerStore] Created NEW player: ${username} (fid: ${fid}) with ${STARTING_POINTS} points`);
   } else {
-    console.log(`[PlayerStore] Found EXISTING player: ${username} (fid: ${fid}) with ${player.pointsBalance} points`);
-    const wasReset = checkAndResetDaily(player);
+    console.log(`[PlayerStore] Found EXISTING player: ${username} (fid: ${fid}) with ${player.pointsBalance} points, lastReset=${player.lastDailyReset}`);
+    
+    // Check if we need to reset daily points
+    const lastReset = player.lastDailyReset || "";
+    const needsReset = lastReset !== today;
+    
+    console.log(`[PlayerStore] Reset check: lastReset="${lastReset}", today="${today}", needsReset=${needsReset}`);
+    
+    if (needsReset) {
+      console.log(`[PlayerStore] 🔄 DAILY RESET! ${player.username}: ${player.pointsBalance} → ${STARTING_POINTS} points`);
+      player.pointsBalance = STARTING_POINTS;
+      player.dailyBreakPot = 0;
+      player.lastDailyReset = today;
+      
+      // Also reset weekly if it's a new week
+      if (!isThisWeek(lastReset)) {
+        console.log(`[PlayerStore] 🔄 WEEKLY RESET! Clearing weeklyBreakPot`);
+        player.weeklyBreakPot = 0;
+      }
+    }
+    
+    // Always update these fields
     player.username = username;
     if (displayName) player.displayName = displayName;
     player.lastActiveAt = new Date().toISOString();
-    if (wasReset) {
-      console.log(`[PlayerStore] Daily reset triggered for ${username}`);
-      await savePlayer(player);
-    }
+    
+    // Always save to ensure reset persists
+    await savePlayer(player);
+    console.log(`[PlayerStore] Saved player ${username} with balance ${player.pointsBalance}`);
   }
 
   return player;
