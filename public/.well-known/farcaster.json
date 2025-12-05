@@ -7,15 +7,20 @@
   "baseBuilder": {
     "ownerAddress": "0x6cEF30c2546ce5E9a6D160B34112Fbb080BEDeb6"
   },
-  "frame": {
+  "miniapp": {
     "version": "1",
     "name": "Chain Reaction",
+    "subtitle": "Social Domino Game",
+    "description": "A single global chain of dominoes. Extend the chain to grow the pot, or break it to claim the prize. Risk vs reward – who blinks first?",
     "iconUrl": "https://chain-reaction-mini.vercel.app/icon.png",
     "splashImageUrl": "https://chain-reaction-mini.vercel.app/splash.png",
     "splashBackgroundColor": "#BFE6EF",
     "homeUrl": "https://chain-reaction-mini.vercel.app",
     "webhookUrl": "https://chain-reaction-mini.vercel.app/api/webhook",
-    "imageUrl": "https://chain-reaction-mini.vercel.app/minikit-hero.png"
+    "heroImageUrl": "https://chain-reaction-mini.vercel.app/minikit-hero.png",
+    "tagline": "Build the chain. Win the pot.",
+    "ogTitle": "Chain Reaction",
+    "ogDescription": "Extend the chain or break it to claim the pot. A social game of risk and reward."
   },
   "primaryCategory": "games",
   "tags": ["game", "social", "strategy", "domino"]
